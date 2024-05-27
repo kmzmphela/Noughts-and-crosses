@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.frei.tic_tac_toe";
+option java_outer_classname = "Tictactoe";
+
+package tic_tac_toe;
+
+
+service TictactoeService {
+  // Sends a greeting
+  rpc StartGame (StartRequest) returns (StartResponse);
+  rpc MakeMove (MoveRequest) returns (StartResponse);
+}
+
+
+
+// The request message containing the user's name.
+message StartRequest {
+  string side = 1;
+}
+
+// The response message containing the greetings.
+message StartResponse {
+  string num = 1;
+  string A = 2;
+  string AL = 3;
+  string B = 4;
+  string BL = 5;
+  string C = 6;
+  string result = 7;
+}
+
+message MoveRequest {
+ string row = 1;
+ string col = 2;
+}
