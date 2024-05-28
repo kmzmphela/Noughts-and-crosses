@@ -27,14 +27,27 @@ public class GameController extends TictactoeServiceGrpc.TictactoeServiceImplBas
         responseObserver.onCompleted();
     }
 
+    /**
+     *
+     * @param request
+     * @param responseObserver
+     */
     @Override
     public void makeMove(MoveRequest request, StreamObserver<StartResponse> responseObserver){
 
-        logger.info("Your move was col, "+ request.getCol() +" row: "+ request.getRow());
+        String row = request.getRow();
+        String col = request.getCol();
 
-        gameService.move(request.getRow(),request.getCol());
-        StartResponse response = gameService.showBoard();
-
+        StartResponse response;
+        try {
+            gameService.move(row, col);
+            response = gameService.showBoard();
+            logger.info("Player move was col, "+ col +" row: "+ row);
+        }catch (IllegalArgumentException ex){
+            logger.error("Player attempted illegal move",ex);
+            // todo: enhance with error message for player
+            response = gameService.showBoard();
+        }
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();

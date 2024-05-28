@@ -4,10 +4,8 @@ import org.infinispan.manager.EmbeddedCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Random;
 
 @Service
@@ -48,6 +46,8 @@ public class GameService {
     }
 
     public void move(String row,String col){
+        validateMove(row,col);
+
         if(hasMoves())
             board[Integer.parseInt(row)][Integer.parseInt(col)] = playerSide;
         if ("In progress".equals(checkWinner()) && hasMoves())
@@ -55,7 +55,7 @@ public class GameService {
     }
 
     public StartResponse showBoard(){
-        StartResponse response = StartResponse.newBuilder().setNum(" 1   2   3 ")
+        StartResponse response = StartResponse.newBuilder().setNum(" 0   1   2 ")
                 .setA("A  "+board[0][0]+" | "+board[0][1]+"  | "+board[0][2]+"  ")
                 .setAL("  ------------")
                 .setB("B  "+board[1][0]+" | "+board[1][1]+"  | "+board[1][2]+"  ")
@@ -137,5 +137,17 @@ public class GameService {
             }
         }
         return false;
+    }
+
+    private void validateMove(String row, String col){
+       int numRow = Integer.parseInt(row);
+       int numCol = Integer.parseInt(col);
+
+       if(numRow >= 0 && numRow < 3 && numCol >= 0 && numCol < 3 ){
+           if(" ".equals(board[numRow][numCol])){
+               return;
+           }
+       }
+       throw new IllegalArgumentException("Illegal move, try again");
     }
 }
